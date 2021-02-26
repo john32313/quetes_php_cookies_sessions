@@ -1,5 +1,34 @@
 <?php require 'inc/data/products.php'; ?>
 <?php require 'inc/head.php'; ?>
+
+<?php
+
+if (!isset($_SESSION['username'])) {
+    header('Location: http://quetes_php_cookies_sessions.test/login.php');
+}
+
+if (isset($_GET['add_to_cart'])) {
+    $array = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+    $isset = false;
+    foreach (array_values($array) as $ind => $value) {
+        if ($value['id'] === $_GET['add_to_cart']) {
+            $update = ["id" => $value["id"], "qty" => ($value["qty"] + 1)];
+            $array[$ind] = $update;
+            print_r($_SESSION['cart'][$ind]);
+            echo '<br/>';
+            $isset = true;
+        }
+    }
+    if (!$isset) {
+        $new = ['id' => $_GET['add_to_cart'], 'qty' => 1];
+        array_push($array, $new);
+    }
+
+    $_SESSION['cart'] = $array;
+}
+var_dump($_SESSION);
+?>
+
 <section class="cookies container-fluid">
     <div class="row">
         <?php foreach ($catalog as $id => $cookie) { ?>
